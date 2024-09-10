@@ -1,0 +1,57 @@
+#!/bin/sh
+
+if [ "$GITMOJI_COMMIT" = "1" ]; then
+    exit 0
+fi
+
+echo "Running gitmoji hook."
+
+# Get most recent commit
+LATEST_COMMIT=$(git rev-parse --short HEAD)
+
+# Get the commit message of the latest commit
+COMMIT_MSG=$(git log -1 --pretty=%B)
+
+# checks for keywords and adds appropriate gitmoji
+if echo "${COMMIT_MSG}" | grep -iq "performance"; then
+    GITMOJI=":zap:"
+elif echo "${COMMIT_MSG}" | grep -iq "documentation"; then
+    GITMOJI=":fire:"
+elif echo "${COMMIT_MSG}" | grep -iq "linting"; then
+    GITMOJI=":rotating_light:"
+elif echo "${COMMIT_MSG}" | grep -iq "unfinished"; then
+    GITMOJI=":construction:"
+elif echo "${COMMIT_MSG}" | grep -iq "workflow"; then
+    GITMOJI=":green_heart:"
+elif echo "${COMMIT_MSG}" | grep -iq "dependencies"; then
+    GITMOJI=":pushpin:"
+elif echo "${COMMIT_MSG}" | grep -iq "refactor"; then
+    GITMOJI=":recycle:"
+elif echo "${COMMIT_MSG}" | grep -iq "config"; then
+    GITMOJI=":wrench:"
+elif echo "${COMMIT_MSG}" | grep -iq "revert"; then
+    GITMOJI=":rewind:"
+elif echo "${COMMIT_MSG}" | grep -iq "merge"; then
+    GITMOJI=":twisted_rightwards_arrows:"
+elif echo "${COMMIT_MSG}" | grep -iq "comment"; then
+    GITMOJI=":bulb:"
+elif echo "${COMMIT_MSG}" | grep -iq "logging"; then
+    GITMOJI=":loud_sound:"
+elif echo "${COMMIT_MSG}" | grep -iq "types"; then
+    GITMOJI=":label:"
+elif echo "${COMMIT_MSG}" | grep -iq "infrastructure"; then
+    GITMOJI=":bricks:"
+elif echo "${COMMIT_MSG}" | grep -iq "fix"; then
+    GITMOJI=":bug:"
+elif echo "${COMMIT_MSG}" | grep -iq "add"; then
+    GITMOJI=":sparkles:"
+elif echo "${COMMIT_MSG}" | grep -iq "remove"; then
+    GITMOJI=":fire:"
+else
+    GITMOJI=":rocket:"
+fi
+
+# Amend the latest commit with the new message
+GITMOJI_COMMIT=1 git commit --amend -m "$GITMOJI $COMMIT_MSG" > /dev/null
+
+echo "Added gitmoji to commit message."
