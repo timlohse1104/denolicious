@@ -42,8 +42,9 @@ async function classifyTextVegan(text: string) {
         content: text,
       },
     ],
+    response_format: { type: 'json_object' },
     temperature: 0.01,
-    max_tokens: 2048,
+    max_tokens: 256,
     frequency_penalty: 0.9,
     presence_penalty: 0.9,
     stream: false,
@@ -95,6 +96,8 @@ async function run() {
       const jsonSubstring = rawOutput?.substring(rawOutput?.indexOf('{'), rawOutput.lastIndexOf('}') + 1);
       if (!jsonSubstring) {
         console.log('❌ LLM sent no parsable json.');
+        console.log(`rawOutput: ${rawOutput}`);
+        console.log(`jsonSubstring: ${jsonSubstring}`);
         continue;
       }
       // console.log('jsonSubstring', jsonSubstring);
